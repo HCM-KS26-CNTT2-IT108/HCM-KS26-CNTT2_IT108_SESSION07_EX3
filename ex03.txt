@@ -1,0 +1,26 @@
+1. SƠ ĐỒ 3 BƯỚC LUỒNG DỮ LIỆU (stdout -> | -> stdin)
+
+[Get-Content access.log] (stdout) 
+       │
+       ▼  (|)
+[Select-String "TIMEOUT"] (stdin)
+       │
+       ▼  (|)
+[Measure-Object -Line] (stdout ra con số duy nhất)
+
+- Bước 1 (Get-Content access.log): Đọc nội dung file log và đẩy dữ liệu ra đầu ra tiêu chuẩn (stdout).
+- Bước 2 (Select-String "TIMEOUT"): Nhận dữ liệu đầu vào (stdin), lọc ra các dòng chứa từ khóa "TIMEOUT" và chuyển tiếp.
+- Bước 3 (Measure-Object -Line): Đếm số lượng dòng khớp và trả về kết quả số lượng cuối cùng.
+
+
+2. CÂU LỆNH POWERSHELL HOÀN CHỈNH 
+
+Sử dụng Measure-Object:
+Get-Content .\access.log | Select-String "TIMEOUT" | Measure-Object -Line | Select-Object -ExpandProperty Lines
+
+
+3. GIẢI THÍCH CHI TIẾT CÁC THÀNH PHẦN
+- Get-Content .\access.log: Đọc file access.log từng dòng một.
+- | (Pipe): Chuyển dữ liệu trực tiếp qua RAM mà không cần file trung gian.
+- Select-String "TIMEOUT": Lọc các dòng xuất hiện từ khóa lỗi "TIMEOUT".
+- Measure-Object -Line / .Count: Đếm tổng số dòng được truyền qua và rút gọn để chỉ in ra đúng một con số duy nhất (ví dụ: 42).
